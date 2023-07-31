@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { UserDatabase } from "../database/UserDatabase";
 import { UserDB } from "../types";
 
-export class LabookController {
+export class UserController {
   public createUser = async (req: Request, res: Response) => {
     try {
       const { name, email, password } = req.body;
