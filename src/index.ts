@@ -1,6 +1,6 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-import { LabookController } from "./controller/LabookController";
+import { UserController } from "./controller/UserController";
 
 const app = express();
 
@@ -29,7 +29,7 @@ app.get("/ping", async (req: Request, res: Response) => {
   }
 });
 
-const labookController = new LabookController();
+const labookController = new UserController();
 
-//Endpoint para cria um novo usuário
+//Endpoint para criar um novo usuário
 app.post("/users/signup", labookController.createUser);
