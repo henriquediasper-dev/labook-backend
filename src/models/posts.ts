@@ -1,28 +1,46 @@
-export class Posts {
+export interface PostsDB {
+  id: string;
+  creator_id: string;
+  content: string;
+  likes: number;
+  dislikes: number;
+  created_at: string;
+  updated_at: string;
+}
+
+export interface LikeDislikeDB {
+  user_id: string;
+  post_id: string;
+  like: number;
+}
+
+export interface PostModel {
+  id: string;
+  content: string;
+  likes: number;
+  dislikes: number;
+  created_at: string;
+  updated_at: string;
+  creator: {
+    id: string;
+    name: string;
+  };
+}
+
+export class Post {
   constructor(
     private id: string,
-    private creatorId: string,
     private content: string,
     private likes: number,
     private dislikes: number,
     private createdAt: string,
-    private updatedAt: string
+    private updatedAt: string,
+    private creatorId: string,
+    private creatorName: string
   ) {}
 
   public getId(): string {
     return this.id;
-  }
-
-  public setId(v: string): void {
-    this.id = v;
-  }
-
-  public getCreatorId(): string {
-    return this.creatorId;
-  }
-
-  public setCreatorId(v: string): void {
-    this.creatorId = v;
   }
 
   public getContent(): string {
@@ -53,15 +71,27 @@ export class Posts {
     return this.createdAt;
   }
 
-  public setCreatedAt(v: string): void {
-    this.createdAt = v;
-  }
-
   public getUpdatedAt(): string {
     return this.updatedAt;
   }
 
   public setUpdatedAt(v: string): void {
     this.updatedAt = v;
+  }
+
+  public getCreatorId(): string {
+    return this.creatorId;
+  }
+
+  public setCreatorId(v: string): void {
+    this.creatorId = v;
+  }
+
+  public getCreatorName(): string {
+    return this.creatorName;
+  }
+
+  public setCreatorName(v: string): void {
+    this.creatorName = v;
   }
 }
