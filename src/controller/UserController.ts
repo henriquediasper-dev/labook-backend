@@ -1,67 +1,55 @@
 import { Request, Response } from "express";
-import { UserDatabase } from "../database/UserDatabase";
-import { UserDB } from "../types";
+import { ZodError } from "zod";
+import { BaseError } from "../errors/BaseError";
+import { SignupSchema } from "../dtos/user/signup.dto";
+import { LoginSchema } from "../dtos/user/login.dto";
 
 export class UserController {
-  public createUser = async (req: Request, res: Response) => {
+  constructor(private userBusiness: UserBusiness) {}
+
+  public signup = async (req: Request, res: Response) => {
     try {
-      const { name, email, password } = req.body;
+      const input = SignupSchema.parse({
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password,
+      });
 
-      if (typeof name !== "string") {
-        return res.status(400).send({ error: "'name' deve ser uma string" });
-      }
+      const output = await this.userBusiness.signup(input);
 
-      if (typeof email !== "string") {
-        return res.status(400).send({ error: "'email' deve ser uma string" });
-      }
-
-      if (typeof password !== "string") {
-        return res
-          .status(400)
-          .send({ error: "'password' deve ser uma string" });
-      }
-
-      const passwordRegex =
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-      // Verifica se a senha corresponde ao padrão definido pelo regex.
-      if (!passwordRegex.test(password)) {
-        return res.status(400).send({
-          error:
-            "A senha deve conter pelo menos 8 caracteres, incluindo pelo menos uma letra maiúscula, uma letra minúscula, um número e um caractere especial (@, $, !, %, *, ?, &).",
-        });
-      }
-
-      const userDatabase = new UserDatabase();
-
-      // Verifica se um usuário com o mesmo 'email' já existe no banco de dados.
-      const userDBExists = await userDatabase.findUserByEmail(email);
-
-      if (userDBExists) {
-        return res.status(400).send({ error: "'email' já existe" });
-      }
-
-      // Se o 'email' for único, cria um novo objeto User com os dados fornecidos.
-      const newUser: UserDB = { name, email, password };
-
-      // Insere o novo usuário no banco de dados.
-      await userDatabase.createUser(newUser);
-
-      // Retorna uma resposta de sucesso com os detalhes do novo usuário.
-      return res
-        .status(201)
-        .send({ message: "Usuário criado com sucesso!", user: newUser });
+      res.status(201).send(output);
     } catch (error) {
       console.log(error);
 
-      if (req.statusCode === 200) {
-        res.status(500);
-      }
-
-      if (error instanceof Error) {
-        res.send({ error: error.message });
+      if (error instanceof BaseError) {
+        res.status(error.statusCode).send(error.message);
+      } else if (error instanceof ZodError) {
+        res.status(400).send(error.issues);
       } else {
-        res.send({ error: "Erro inesperado" });
+        res.status(500).send("Erro inesperado.");
+      }
+    }
+  };
+
+  public login = async (req: Request, res: Response) => {
+    try {
+      const input = LoginSchema.parse({
+        email: req.body.email,
+        password: req.body.password,
+      });
+
+      const output = await this.userBusiness.signup(input);
+
+      res.status(201).send(output);
+    } catch (error) {
+      console.log(error);
+
+      if (error instanceof BaseError) {
+        res.status(error.statusCode).send(error.message);
+      } else if (error instanceof ZodError) {
+        res.status(400).send(error.issues);
+      } else {
+        res.status(500).send("Erro inesperado.");
       }
     }
   };

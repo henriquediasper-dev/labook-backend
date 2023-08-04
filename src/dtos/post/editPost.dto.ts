@@ -8,7 +8,7 @@ export interface EditPostInputDTO {
 
 export type EditPostOutputDTO = undefined;
 
-export const CreatePostSchema = z
+export const EditPostSchema = z
   .object({
     idToEdit: z.string().min(1),
     token: z.string().min(1),
