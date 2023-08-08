@@ -1,21 +1,21 @@
 // Enum limita a tipo normal ou admin
-// export enum USER_ROLES {
-//   Admin = "Admin",
-//   Normal = "Normal",
-// }
+export enum USER_ROLES {
+  ADMIN = "ADMIN",
+  NORMAL = "NORMAL",
+}
 
-// export interface TokenPayload {
-//   id: string;
-//   name: string;
-//   role: USER_ROLES;
-// }
+export interface TokenPayload {
+  id: string;
+  name: string;
+  role: USER_ROLES;
+}
 
 export interface UserDB {
   id: string;
   name: string;
   email: string;
   password: string;
-  role: string;
+  role: USER_ROLES;
   created_at: string;
 }
 
@@ -23,7 +23,7 @@ export interface UserModel {
   id: string;
   name: string;
   email: string;
-  role: string;
+  role: USER_ROLES;
   createdAt: string;
 }
 
@@ -33,7 +33,7 @@ export class User {
     private name: string,
     private email: string,
     private password: string,
-    private role: string,
+    private role: USER_ROLES,
     private createdAt: string
   ) {}
 
@@ -62,11 +62,11 @@ export class User {
     this.password = value;
   }
 
-  public getRole(): string {
+  public getRole(): USER_ROLES {
     return this.role;
   }
-  public setRole(value: string): void {
-    this.role = value;
+  public setRole(value: string): USER_ROLES {
+    return this.role;
   }
 
   public getCreated_at(): string {

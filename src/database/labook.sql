@@ -23,7 +23,7 @@ CREATE TABLE
     );
 
 CREATE TABLE
-    liskes_dislikes (
+    likes_dislikes (
         user_id TEXT NOT NULL,
         post_id TEXT NOT NULL,
         like INTEGER NOT NULL,
@@ -32,8 +32,12 @@ CREATE TABLE
 
 DROP TABLE users;
 
-SELECT * FROM users DROP TABLE posts;
+SELECT * FROM users;
 
-SELECT * FROM posts DROP TABLE likes_dislikes;
+DROP TABLE posts;
 
-SELECT * FROM liskes_dislikes 
+SELECT * FROM posts;
+
+DROP TABLE likes_dislikes;
+
+SELECT * FROM likes_dislikes;
