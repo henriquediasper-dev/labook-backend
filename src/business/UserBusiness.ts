@@ -5,28 +5,29 @@ import { BadRequestError } from "../errors/BadRequestError";
 // import { ConflictError } from "../errors/ConflictError";
 import { NotFoundError } from "../errors/NotFoundError";
 import { TokenPayload, USER_ROLES, User } from "../models/user";
+import { IdGenerator } from "../services/IdGenerator";
+import { TokenManeger } from "../services/TokenManeger";
 // import { HashManager } from "../services/HashManeger";
-// import { IdGenerator } from "../services/IdGenerator";
 // import { TokenManager } from "../services/TokenManeger";
 
 export class UserBusiness {
   constructor(
     private userDatabase: UserDatabase,
     private idGenerator: IdGenerator,
-    private tokenManeger: TokenManager,
-    private hashManeger: HashManager
+    private tokenManeger: TokenManeger // private hashManeger: HashManager
   ) {}
 
-  public signup = async (input: SignupInputDTO) => {
+  public signup = async (input: SignupInputDTO): Promise<SignupOutputDTO> => {
     const { name, email, password } = input;
 
-    const userBDExists = await this.userDatabase.getAllUserByEmail(email);
+    // const userBDExists = await this.userDatabase.getAllUserByEmail(email);
 
-    if (userBDExists) {
-      throw new ConflictError("Email já existe");
-    }
+    // if (userBDExists) {
+    //   throw new ConflictError("Email já existe");
+    // }
 
     const id = this.idGenerator.generate();
+
     const hashedPassword = await this.hashManeger.hash(password);
 
     const newUser = new User(
@@ -50,13 +51,14 @@ export class UserBusiness {
     const token = this.tokenManeger.createToken(payload);
 
     const output: SignupOutputDTO = {
+      message: "Cadastro realizado com sucesso",
       token,
     };
 
     return output;
   };
 
-  public userLogin = async (input: LoginInputDTO) => {
+  public userLogin = async (input: LoginInputDTO): Promise<LoginOutputDTO> => {
     const { email, password } = input;
 
     const userBDExists = await this.userDatabase.getAllUserByEmail(email);
