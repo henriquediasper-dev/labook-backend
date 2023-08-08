@@ -6,6 +6,7 @@ import { CreatePostSchema } from "../dtos/post/createPost.dto";
 import { EditPostSchema } from "../dtos/post/editPost.dto";
 import { DeletePostSchema } from "../dtos/post/deletePost.dto";
 import { LikeOrDislikePostsSchema } from "../dtos/post/likeOrDislikePost.dto";
+import { PostBusiness } from "../business/PostBusiness";
 
 export class PostController {
   constructor(private postBusiness: PostBusiness) {}
@@ -38,7 +39,7 @@ export class PostController {
         content: req.body.content,
       });
 
-      const output = await this.postBusiness.postPost(input);
+      const output = await this.postBusiness.createPost(input);
 
       res.status(201).send(output);
     } catch (error) {

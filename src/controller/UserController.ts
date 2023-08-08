@@ -3,6 +3,7 @@ import { ZodError } from "zod";
 import { BaseError } from "../errors/BaseError";
 import { SignupSchema } from "../dtos/user/signup.dto";
 import { LoginSchema } from "../dtos/user/login.dto";
+import { UserBusiness } from "../business/UserBusiness";
 
 export class UserController {
   constructor(private userBusiness: UserBusiness) {}
@@ -38,7 +39,7 @@ export class UserController {
         password: req.body.password,
       });
 
-      const output = await this.userBusiness.signup(input);
+      const output = await this.userBusiness.userLogin(input);
 
       res.status(201).send(output);
     } catch (error) {

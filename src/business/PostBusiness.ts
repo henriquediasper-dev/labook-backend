@@ -16,9 +16,15 @@ import {
 import { NotFoundError } from "../errors/NotFoundError";
 import { LikeDislikeDB, POST_LIKE, Post } from "../models/posts";
 import { USER_ROLES } from "../models/user";
+import { IdGenerator } from "../services/IdGenerator";
+import { TokenManeger } from "../services/TokenManeger";
 
 export class PostBusiness {
-  constructor(private postDatabase: PostDatabase) {}
+  constructor(
+    private postDatabase: PostDatabase,
+    private idGenerator: IdGenerator,
+    private tokenManeger: TokenManeger
+  ) {}
 
   public getPost = async (
     input: GetPostInputDTO
@@ -146,7 +152,7 @@ export class PostBusiness {
       throw new NotFoundError("Id da postagem não existe");
     }
 
-    if (payload.role !== USER_ROLES.Admin) {
+    if (payload.role !== USER_ROLES.ADMIN) {
       if (payload.id !== postDBExists.creator_id) {
         throw new ForbiddenError(
           "Somente o criador da postagem pode excluí-la"
