@@ -8,10 +8,26 @@ export interface PostsDB {
   updated_at: string;
 }
 
+export interface PostDBWithCreatorName {
+  id: string;
+  creator_id: string;
+  content: string;
+  likes: number;
+  dislikes: number;
+  created_at: string;
+  updated_at: string;
+  creator_name: string;
+}
+
 export interface LikeDislikeDB {
   user_id: string;
   post_id: string;
   like: number;
+}
+
+export enum POST_LIKE {
+  ALREADY_LIKED = "ALREADY_LIKED",
+  ALREADY_DISLIKED = "ALREADY_DISLIKED",
 }
 
 export interface PostModel {
@@ -59,6 +75,14 @@ export class Post {
     this.likes = v;
   }
 
+  public addLike = (): void => {
+    this.likes++;
+  };
+
+  public removeLike = (): void => {
+    this.likes--;
+  };
+
   public getDislikes(): number {
     return this.dislikes;
   }
@@ -66,6 +90,14 @@ export class Post {
   public setDislikes(v: number): void {
     this.dislikes = v;
   }
+
+  public addDislike = (): void => {
+    this.dislikes++;
+  };
+
+  public removeDislike = (): void => {
+    this.dislikes--;
+  };
 
   public getCreatedAt(): string {
     return this.createdAt;
@@ -93,5 +125,32 @@ export class Post {
 
   public setCreatorName(v: string): void {
     this.creatorName = v;
+  }
+
+  public toDBModel(): PostsDB {
+    return {
+      id: this.id,
+      creator_id: this.creatorId,
+      content: this.content,
+      likes: this.likes,
+      dislikes: this.dislikes,
+      created_at: this.createdAt,
+      updated_at: this.updatedAt,
+    };
+  }
+
+  public toBusinessModel(): PostModel {
+    return {
+      id: this.id,
+      content: this.content,
+      likes: this.likes,
+      dislikes: this.dislikes,
+      created_at: this.createdAt,
+      updated_at: this.updatedAt,
+      creator: {
+        id: this.creatorId,
+        name: this.creatorName,
+      },
+    };
   }
 }

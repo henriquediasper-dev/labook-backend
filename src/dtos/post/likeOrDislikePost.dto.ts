@@ -6,7 +6,7 @@ export interface LikeOrDislikePostInputDTO {
   like: boolean;
 }
 
-export type LikeOrDislikePostsOutputDTO = undefined;
+export type LikeOrDislikePostOutputDTO = undefined;
 
 export const LikeOrDislikePostsSchema = z
   .object({
