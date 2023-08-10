@@ -107,7 +107,7 @@ export class PostController {
       const input = LikeOrDislikePostsSchema.parse({
         idToLikeOrDislike: req.params.id,
         token: req.headers.authorization,
-        content: req.body.content,
+        like: req.body.like,
       });
 
       const output = await this.postBusiness.likeOrDislikePost(input);
