@@ -13,17 +13,19 @@ import {
   LikeOrDislikePostInputDTO,
   LikeOrDislikePostOutputDTO,
 } from "../dtos/post/likeOrDislikePost.dto";
+import { ForbiddenError } from "../errors/ForbiddenError";
 import { NotFoundError } from "../errors/NotFoundError";
+import { UnauthorizedError } from "../errors/UnauthorizedError";
 import { LikeDislikeDB, POST_LIKE, Post } from "../models/posts";
 import { USER_ROLES } from "../models/user";
 import { IdGenerator } from "../services/IdGenerator";
-import { TokenManeger } from "../services/TokenManeger";
+import { TokenManager } from "../services/TokenManager";
 
 export class PostBusiness {
   constructor(
     private postDatabase: PostDatabase,
     private idGenerator: IdGenerator,
-    private tokenManeger: TokenManeger
+    private tokenManager: TokenManager
   ) {}
 
   public getPost = async (
@@ -31,7 +33,7 @@ export class PostBusiness {
   ): Promise<GetPostOutputDTO> => {
     const { token } = input;
 
-    const payload = this.tokenManeger.getPayload(token);
+    const payload = this.tokenManager.getPayload(token);
 
     if (!payload) {
       throw new UnauthorizedError("Token inválido");
@@ -64,7 +66,7 @@ export class PostBusiness {
   ): Promise<CreatePostOutputDTO> => {
     const { token, content } = input;
 
-    const payload = this.tokenManeger.getPayload(token);
+    const payload = this.tokenManager.getPayload(token);
 
     if (!payload) {
       throw new UnauthorizedError("Token inválido");
@@ -96,7 +98,7 @@ export class PostBusiness {
   ): Promise<EditPostOutputDTO> => {
     const { token, idToEdit, content } = input;
 
-    const payload = this.tokenManeger.getPayload(token);
+    const payload = this.tokenManager.getPayload(token);
 
     if (!payload) {
       throw new UnauthorizedError("Token inválido");
@@ -140,7 +142,7 @@ export class PostBusiness {
   ): Promise<DeletePostOutputDTO> => {
     const { token, idToDelete } = input;
 
-    const payload = this.tokenManeger.getPayload(token);
+    const payload = this.tokenManager.getPayload(token);
 
     if (!payload) {
       throw new UnauthorizedError("Token inválido");
@@ -172,7 +174,7 @@ export class PostBusiness {
   ): Promise<LikeOrDislikePostOutputDTO> => {
     const { token, idToLikeOrDislike, like } = input;
 
-    const payload = this.tokenManeger.getPayload(token);
+    const payload = this.tokenManager.getPayload(token);
 
     if (!payload) {
       throw new UnauthorizedError("Token inválido");
