@@ -2,33 +2,33 @@ import { UserDatabase } from "../database/UserDatabase";
 import { LoginInputDTO, LoginOutputDTO } from "../dtos/user/login.dto";
 import { SignupInputDTO, SignupOutputDTO } from "../dtos/user/signup.dto";
 import { BadRequestError } from "../errors/BadRequestError";
-// import { ConflictError } from "../errors/ConflictError";
+import { ConflictError } from "../errors/ConflictError";
 import { NotFoundError } from "../errors/NotFoundError";
 import { TokenPayload, USER_ROLES, User } from "../models/user";
+import { HashManager } from "../services/HashManager";
 import { IdGenerator } from "../services/IdGenerator";
-import { TokenManeger } from "../services/TokenManeger";
-// import { HashManager } from "../services/HashManeger";
-// import { TokenManager } from "../services/TokenManeger";
+import { TokenManager } from "../services/TokenManager";
 
 export class UserBusiness {
   constructor(
     private userDatabase: UserDatabase,
     private idGenerator: IdGenerator,
-    private tokenManeger: TokenManeger // private hashManeger: HashManager
+    private tokenManager: TokenManager,
+    private hashManager: HashManager
   ) {}
 
   public signup = async (input: SignupInputDTO): Promise<SignupOutputDTO> => {
     const { name, email, password } = input;
 
-    // const userBDExists = await this.userDatabase.getAllUserByEmail(email);
+    const userBDExists = await this.userDatabase.getAllUserByEmail(email);
 
-    // if (userBDExists) {
-    //   throw new ConflictError("Email já existe");
-    // }
+    if (userBDExists) {
+      throw new ConflictError("Email já existe");
+    }
 
     const id = this.idGenerator.generate();
 
-    const hashedPassword = await this.hashManeger.hash(password);
+    const hashedPassword = await this.hashManager.hash(password);
 
     const newUser = new User(
       id,
@@ -48,7 +48,7 @@ export class UserBusiness {
       role: newUser.getRole(),
     };
 
-    const token = this.tokenManeger.createToken(payload);
+    const token = this.tokenManager.createToken(payload);
 
     const output: SignupOutputDTO = {
       message: "Cadastro realizado com sucesso",
@@ -67,6 +67,17 @@ export class UserBusiness {
       throw new NotFoundError("Email não encontrado");
     }
 
+    const hashedPassword = userBDExists.password;
+
+    const isPasswordCorrect = await this.hashManager.compare(
+      password,
+      hashedPassword
+    );
+
+    if (!isPasswordCorrect) {
+      throw new BadRequestError("Email ou senha incorretos");
+    }
+
     const user = new User(
       userBDExists.id,
       userBDExists.name,
@@ -76,26 +87,16 @@ export class UserBusiness {
       userBDExists.created_at
     );
 
-    const hashedPassword = userBDExists.password;
-
-    const isCorrectPassword = await this.hashManeger.compare(
-      password,
-      hashedPassword
-    );
-
-    if (!isCorrectPassword) {
-      throw new BadRequestError("Email ou senha incorretos");
-    }
-
     const payload: TokenPayload = {
       id: user.getId(),
       name: user.getName(),
       role: user.getRole(),
     };
 
-    const token = this.tokenManeger.createToken(payload);
+    const token = this.tokenManager.createToken(payload);
 
     const output: LoginOutputDTO = {
+      message: "Login realizado com sucesso",
       token,
     };
 

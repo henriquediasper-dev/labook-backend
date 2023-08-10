@@ -4,7 +4,7 @@ import { TokenPayload } from "../models/user";
 
 dotenv.config();
 
-export class TokenManeger {
+export class TokenManager {
   // converte o objeto de dados (payload) para um token string
   public createToken = (payload: TokenPayload): string => {
     const token = jwt.sign(payload, process.env.JWT_KEY as string, {

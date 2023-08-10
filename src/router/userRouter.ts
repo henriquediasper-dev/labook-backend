@@ -5,10 +5,18 @@ import { UserDatabase } from "../database/UserDatabase";
 import { IdGenerator } from "../services/IdGenerator";
 import { postRouter } from "./postRouter";
 
+import { HashManager } from "../services/HashManager";
+import { TokenManager } from "../services/TokenManager";
+
 export const userRouter = express.Router();
 
 const userController = new UserController(
-  new UserBusiness(new UserDatabase(), new IdGenerator())
+  new UserBusiness(
+    new UserDatabase(),
+    new IdGenerator(),
+    new TokenManager(),
+    new HashManager()
+  )
 );
 
 postRouter.post("/signup", userController.signup);
