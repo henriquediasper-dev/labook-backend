@@ -1,6 +1,5 @@
 import express, { Request, Response } from "express";
 import cors from "cors";
-import { UserController } from "./controller/UserController";
 import { postRouter } from "./router/postRouter";
 import { userRouter } from "./router/userRouter";
 import dotenv from "dotenv";
@@ -33,8 +32,6 @@ app.get("/ping", async (req: Request, res: Response) => {
     }
   }
 });
-
-// const labookController = new UserController();
 
 app.use("/users", userRouter);
 app.use("/posts", postRouter);
