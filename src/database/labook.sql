@@ -88,3 +88,9 @@ DROP TABLE users;
 DROP TABLE posts;
 
 DROP TABLE likes_dislikes;
+
+-- fulano tipo NORMAL e senha = fulano123
+
+-- betrana tipo NORMAL e senha = beltrana00
+
+-- astrodev tipo ADMIN e senha = astrodev99

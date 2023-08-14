@@ -51,7 +51,6 @@ export class UserBusiness {
     const token = this.tokenManager.createToken(payload);
 
     const output: SignupOutputDTO = {
-      message: "Cadastro realizado com sucesso",
       token,
     };
 
@@ -64,7 +63,7 @@ export class UserBusiness {
     const userBDExists = await this.userDatabase.getAllUserByEmail(email);
 
     if (!userBDExists) {
-      throw new NotFoundError("Email não encontrado");
+      throw new NotFoundError("Email não foi cadastrado");
     }
 
     const hashedPassword = userBDExists.password;
@@ -96,7 +95,6 @@ export class UserBusiness {
     const token = this.tokenManager.createToken(payload);
 
     const output: LoginOutputDTO = {
-      message: "Login realizado com sucesso",
       token,
     };
 
