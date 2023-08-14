@@ -247,10 +247,10 @@ Caso dê um dislike em um post que tenha dado like, o dislike sobrescreve o like
 
 Para rodar o projeto localmente, siga os passos abaixo:
 
-1. Clone o Repositório:
+1. Clone o Repositório e entre na pasta raiz do projeto:
 
 <details>
-  <summary>Clique para ver o comando <code>git clone</code></summary>
+  <summary>Clique para ver o comando <code>git clone / cd labook-backend</code></summary>
   <pre>
     <code>
 git clone https://github.com/henriquediasper-dev/labook-backend.git
